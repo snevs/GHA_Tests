@@ -1,32 +1,22 @@
-name: Run commands on different operating systems
+name: CI
+
 on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  Run-npm-on-Ubuntu:
-    name: Run npm on Ubuntu
+  run-playbooks:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+    steps: 
+      - uses: actions/checkout@v3
         with:
-          node-version: '14'
-      - run: npm help
-
-  Run-PSScriptAnalyzer-on-Windows:
-    name: Run PSScriptAnalyzer on Windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install PSScriptAnalyzer module
-        shell: pwsh
-        run: |
-          Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module PSScriptAnalyzer -ErrorAction Stop
-      - name: Get list of rules
-        shell: pwsh
-        run: |
-          Get-ScriptAnalyzerRule
+          submodules: true
+          token: ${{secrets.REPO_TOKEN}}
+      - name: Run ansible script
+        shell: bash 
+        run: ansible-playbook -vvv -i localhost playbook.yml
