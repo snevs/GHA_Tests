@@ -3,7 +3,7 @@ name: ansible-lint
 
 env:
   BRANCHES: '["main", "stable", "release/v*", "test*" ]'
-  
+
 on:
   push:
     branches:
