@@ -1,5 +1,5 @@
 # .github/workflows/ansible-lint.yml
-name: ansible-lint
+name: Ansible linting action status
 
 env:
   BRANCHES: '["main", "stable", "release/v*", "test*" ]'
