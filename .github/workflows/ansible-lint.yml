@@ -1,8 +1,14 @@
 # .github/workflows/ansible-lint.yml
 name: ansible-lint
+
+env:
+  BRANCHES: '["main", "stable", "release/v*", "test*" ]'
+  
 on:
+  push:
+    branches: ${{ fromJson(env.BRANCHES ) }}
   pull_request:
-    branches: ["main", "stable", "release/v*", "test*" ]
+    branches: ${{ fromJson(env.BRANCHES ) }}
 jobs:
   build:
     name: Ansible Lint
