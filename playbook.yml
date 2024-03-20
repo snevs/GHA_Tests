@@ -2,7 +2,7 @@
 - name: First GH playbook
   hosts: localhost
   tasks:
-    - name: test ping
+    - name: Test ping
       ansible.builtin.ping:
     - name: Debug something
       ansible.builtin.debug:
