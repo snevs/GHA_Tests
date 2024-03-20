@@ -1,12 +1,3 @@
----
-name: Bug report
-about: Report a bug
-title: "[BUG] "
-labels: bug
-assignees: ''
-
----
-
 name: Bug Report
 description: Report a bug
 labels: ["bug"]
