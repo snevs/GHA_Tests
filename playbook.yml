@@ -7,3 +7,4 @@
     - name: Debug something
       debug:
         msg: This is {{ ansible_play_name }}
+        
