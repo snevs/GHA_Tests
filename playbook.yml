@@ -1,6 +1,8 @@
 ---
 - name: First GH playbook
   hosts: localhost
+  vars:
+    password: "test123"
   tasks:
     - name: Test ping
       ansible.builtin.ping:
