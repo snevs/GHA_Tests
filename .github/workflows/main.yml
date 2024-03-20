@@ -7,15 +7,15 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   run-playbooks:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
       - name: Run ansible script
-        shell: bash 
+        shell: bash
         run: ansible-playbook -vvv -i localhost playbook.yml
