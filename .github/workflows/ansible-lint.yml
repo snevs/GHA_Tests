@@ -17,6 +17,7 @@ on:
       - "stable"
       - "release/v*"
       - "test*"
+  workflow_dispatch:
 jobs:
   build:
     name: Ansible Lint
