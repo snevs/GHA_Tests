@@ -6,9 +6,17 @@ env:
   
 on:
   push:
-    branches: ${{ fromJson(env.BRANCHES ) }}
+    branches:
+      - "main"
+      - "stable"
+      - "release/v*"
+      - "test*"
   pull_request:
-    branches: ${{ fromJson(env.BRANCHES ) }}
+    branches:
+      - "main"
+      - "stable"
+      - "release/v*"
+      - "test*"
 jobs:
   build:
     name: Ansible Lint
