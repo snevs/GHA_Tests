@@ -1,9 +1,11 @@
 ---
 - name: First GH playbook
   hosts: localhost
+  vars:
+    password: "test123"
   tasks:
     - name: Test ping
-      ping:
+      ansible.builtin.ping:
     - name: Debug something
-      debug:
+      ansible.builtin.debug:
         msg: This is {{ ansible_play_name }}
