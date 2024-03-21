@@ -19,3 +19,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           add_comment: true
           add_status: true
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
