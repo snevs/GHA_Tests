@@ -2,9 +2,8 @@
 - name: First GH playbook
   hosts: localhost
   tasks:
-    - name: test ping
+    - name: Test ping
       ping:
     - name: Debug something
       debug:
         msg: This is {{ ansible_play_name }}
-        
