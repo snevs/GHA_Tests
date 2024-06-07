@@ -35,7 +35,11 @@ body:
       label: Checks before submitting the issue
       description: Followed steps or checks before submitting the issue
       options:
-        - label: I agree to follow this project's [Code of Conduct](link/to/coc)
+        - label: Validate X
+          required: true
+        - label: Checked Y
+          required: true
+        - label: Tried Z
           required: true
   - type: textarea
     id: steps
