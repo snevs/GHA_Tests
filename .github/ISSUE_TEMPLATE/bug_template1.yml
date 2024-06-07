@@ -1,3 +1,4 @@
+name: Issue Report Template
 body:
   - type: textarea
     attributes:
