@@ -2,7 +2,7 @@ name: Bug Report
 description: Report a bug
 title: "[Bug]: "
 labels: ["bug"]
-body:
+body: |
   - type: checkboxes
     id: cat-preferences
     attributes:
@@ -12,6 +12,7 @@ body:
         - label: Orange cat (required. Everyone likes orange cats.)
           required: true
         - label: **Black cat**
+
   - type: markdown
     attributes:
       value: |
