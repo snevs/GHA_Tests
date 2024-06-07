@@ -1,4 +1,5 @@
 name: Issue Report Template
+description: Template for reporting issues with our software
 body:
   - type: textarea
     attributes:
@@ -29,4 +30,3 @@ body:
   - type: markdown
     attributes:
       value: "Thanks for completing our form!"
-
