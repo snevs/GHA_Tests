@@ -15,6 +15,22 @@ body:
     validations:
       required: true
   - type: textarea
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      placeholder: "Example: macOS Big Sur"
+      value: operating system
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      multiple: false
+      options:
+        - 1.0.2 (Default)
+        - 1.0.3 (Edge)
+  - type: textarea
     id: steps
     attributes:
       label: Steps to reproduce
