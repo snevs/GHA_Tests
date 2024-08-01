@@ -1,0 +1,516 @@
+# Architecture Decision Record: Guideline for Using GitHub Actions in Our Organization
+
+**ADR ID:** 001
+**Date:** 2024-08-02
+**Status:** Accepted
+**Decision Maker:** Solutions Architect Team
+**Context:** Continuous Integration and Continuous Deployment (CI/CD)
+
+---
+
+## Context
+
+As our organization adopts more modern development practices, there is a growing need for robust, flexible, and scalable CI/CD pipelines.
+GitHub Actions, an automation tool integrated with GitHub, and backed by Microsoft, offers a wide array of features for automating workflows directly within our existing GitHub repositories.
+Our infrastructure can change from using hosted technologies, like Jenkins,to a more modern and serverless solution that works out of the box.
+The goal is to establish a standardized guideline for using GitHub Actions to ensure consistency, security, and efficiency across all our projects, while integrating smoothly with Azure and Ansible.
+
+By default, GitHub provides runners for the following operating systems, other OS'es are supported:
+  - Ubuntu (Linux)
+  - macOS
+  - Windows
+
+For other operating systems, such as RHEL, RockyLinux, or Fedora, it is required to have an installed and configured self-hosted runner.
+Self-hosted runners are machines that you configure and manage yourself, allowing you to run GitHub Actions workflows on any operating system that supports the GitHub Actions runner application.
+
+To request a new self-hosted runner, follow the SMA procedure (offering).
+
+## Decision
+
+We have decided to adopt GitHub Actions as the primary tool for automating CI/CD pipelines within our organization, with specific integration points for Azure and Ansible.
+This decision aligns with our goal of migrating from on-premises and self-hosted tools and leverages our services offered by GitHub, Azure, and Ansible.
+
+## Key Guidelines
+
+	1.	[Workflow Configuration](#1-workflow-configuration)
+	2.	[Workflow Triggers](#2-workflow-triggers)
+	3.	[Job Configuration](#3-job-configuration)
+	4.	[Azure Integration](#4-azure-integration)
+	5.	[Ansible Integration](#5-ansible-integration)
+	6.	[Artifacts](##rewrite-artifacts) [TO-REDO]
+	7.	[Security Best Practices](#6-security-best-practices)
+	8.	[Dependency Management](#7-dependency-management)
+	9.	[Artifact Management](#8-artifact-management)
+	10.	[Notifications and Reporting](#9-notifications-and-reporting)
+	11.	[Error Handling and Debugging](#10-error-handling-and-debugging)
+	12.	[Performance Optimization](#11-performance-optimization)
+	13.	[Compliance and Documentation](#12-compliance-and-documentation)
+
+
+### 1. Workflow Configuration
+
+- All CI/CD workflows have to be defined in YAML files located in the `.github/workflows/` directory within the respective repository.
+- Workflow files should be named clearly and descriptively (e.g., `ci.yml`, `deploy.yml`).
+
+**Example:**
+
+```yaml
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+```
+
+
+### 2. Workflow Triggers
+
+- Use appropriate events to trigger workflows, such as `push`, `pull_request`, `release`, or scheduled events (`cron`).
+- Avoid unnecessary triggers to prevent redundant builds and excessive resource consumption.
+
+**Example:**
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 1'  # Runs every Monday at midnight
+```
+
+### 3. Job Configuration
+
+- Define jobs with clear and descriptive names for steps within jobs.
+- Utilize reusable workflows or action files (`.github/actions/`) where appropriate to promote reusability and reduce redundancy across repositories.
+- Ensure that each job runs in a clean environment by leveraging GitHub-provided runners, or use custom runners if specific hardware or environments are required and a new self-hosted runner has been requested via SMA and set up for you.
+
+**Example:**
+
+```yaml
+name: Ansible CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Ansible and Molecule
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+          pip install molecule[docker] ansible-lint
+
+      - name: Run Molecule Tests
+        run: |
+          cd roles/myrole
+          molecule test
+```
+
+### 4. Azure Integration
+
+- Use Azure-specific GitHub Actions to integrate with our Azure infrastructure.
+- Store Azure service credentials securely using GitHub Secrets, and access them within workflows as needed.
+- Define and document standard workflows for common Azure tasks such as deploying to Azure App Service, Azure Kubernetes Service (AKS), or managing Azure resources with Azure CLI.
+
+**Example: Deploy a new Azure Key Vault and assign an NSG to a NIC**
+
+```yaml
+name: Azure Infrastructure Deployment
+
+on: [push, pull_request]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Azure Resource Group
+        run: |
+          az group create --name myResourceGroup --location westeurope
+
+      - name: Deploy Azure Key Vault
+        run: |
+          az keyvault create --name myKeyVault --resource-group myResourceGroup --location westeurope
+
+      - name: Create Network Security Group (NSG)
+        run: |
+          az network nsg create --resource-group myResourceGroup --name myNetworkSecurityGroup
+
+      - name: Assign NSG to a Virtual Machine
+        run: |
+          az network nic update --resource-group myResourceGroup --name myNIC --network-security-group myNetworkSecurityGroup
+```
+
+**Example: Run Azure CLI commands**
+
+```yaml
+jobs:
+  azure-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Azure CLI
+        uses: azure/cli@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+            az group create --name myResourceGroup --location eastus```
+```
+
+**Example: Fetching secrets from Azure Key Vault**
+```yaml
+jobs:
+  fetch-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Retrieve secrets from Azure Key Vault
+        uses: azure/keyvault-secrets@v1
+        with:
+          keyvault: myKeyVault
+          secrets: |
+            MY_SECRET
+            ANOTHER_SECRET
+      - name: Use secrets
+        run: |
+          echo "My secret is ${{ secrets.MY_SECRET }}"
+```
+- When using Azure Key Vault in actions, ensure that the Azure Key Vault is properly configured with the necessary access policies to allow GitHub Actions to retrieve secrets.
+- Document the use of Azure Key Vault in the repository's README.md or a dedicated CI/CD documentation file to explain how secrets are managed and accessed within workflows.
+
+
+### 5. Ansible Integration
+- Leverage Ansible within GitHub Actions for infrastructure management and deployment tasks.
+- Utilize Ansible collections to organize and share roles, modules, and plugins. Store these collections in your repositories or use collections from Ansible Galaxy.
+- Use the `ansible/ansible-runner-action@v1` action for executing Ansible playbooks or roles directly from GitHub Actions.
+- Integrate Ansible Automation Platform to manage and scale your Ansible deployments, utilizing features like Automation Hub for accessing certified content and Automation Controller for managing workflows and inventories.
+- Implement Molecule for testing Ansible roles and playbooks. Molecule allows for the creation, testing, and validation of Ansible roles in various environments.
+
+**Example: Execute Ansible Playbook from a Collection**
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Ansible and required collections
+        run: |
+          pip install ansible
+          ansible-galaxy collection install myorg.mycollection
+
+      - name: Run Ansible Playbook
+        run: ansible-playbook myorg.mycollection.playbook_name --extra-vars "env=production"
+```
+
+**Example: Molecule Testing for Ansible Roles**
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Molecule and dependencies
+        run: |
+          pip install molecule[docker] ansible-lint
+
+      - name: Run Molecule Tests
+        run: |
+          cd roles/myrole
+          molecule test
+```
+
+Integrating Ansible Automation Platform
+
+
+1. Using Automation Controller (Ansible Tower) API
+
+Ansible Automation Controller provides a REST API that can be used to trigger Ansible jobs, workflows, and monitor their status. The API can be used from within a GitHub Actions workflow.
+
+Example of triggering an Ansible job in Ansible Automation Controller using GitHub Actions:
+
+```yaml
+name: Trigger Ansible job via Automation Controller
+
+on: [push, pull_request]
+
+jobs:
+  trigger-ansible-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Ansible Job
+        run: |
+          curl -s -X POST https://automation-controller-url/api/v2/job_templates/<job_template_id>/launch/ \
+          -H "Authorization: Bearer ${{ secrets.AAP_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "extra_vars": {
+                  "variable1": "value1",
+                  "variable2": "value2"
+                }
+              }'
+
+      - name: Check Job Status
+        run: |
+          sleep 10  # Wait for job to start
+          curl -s https://your-automation-controller-url/api/v2/jobs/<job_id>/ \
+          -H "Authorization: Bearer ${{ secrets.AAP_API_TOKEN }}"
+```
+
+############
+############
+############
+#Finish methos of using a playbook for running jobs#
+
+- Document the use of Ansible Automation Platform, including links to collections, in the repository's README.md or a dedicated CI/CD documentation file to explain the setup and usage of Ansible components within workflows.
+
+### 7. Security Best Practices
+
+- Never hardcode sensitive data
+- Store sensitive information such as Azure credentials, API keys, and Ansible Vault passwords securely in GitHub using Secrets.
+- Minimize the use of personal access tokens (PAT) and use GitHub's built-in authentication mechanisms (GITHUB_TOKEN, OIDC ### need to add more data here###) where possible.
+- Marketplace actions, but not only, can have security flaws, regularly review and audit access to GitHub Actions and Secrets.
+
+**Example: Using a secret `API_KEY`**
+
+```yaml
+steps:
+  - name: Deploy to production
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
+    run: curl -X POST -H "Authorization: Bearer $API_KEY" https://api.example.com/deploy
+```
+
+### 8. Dependency Management
+
+- Use GitHub's dependency caching mechanisms (`actions/cache`) to optimize build times and reduce resource usage.
+- Pin action versions explicitly in the workflow files to prevent unexpected issues caused by updates to actions.
+
+**Example: Caching Python dependendencies**
+
+```yaml
+steps:
+  - name: Cache Python dependencies
+    uses: actions/cache@v3
+    with:
+      path: ~/.cache/pip
+      key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      restore-keys: |
+        ${{ runner.os }}-pip-
+
+  - name: Install dependencies
+    run: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+```
+
+### 9. Artifact Management
+
+- You can store build artifacts that are necessary for deployment or further use in other jobs within GitHub Actions. -- ### need to clarify this ###
+- If you do use artifacts, define clear retention policies for artifacts to prevent unnecessary storage consumption.
+
+**Example:**
+
+```yaml
+steps:
+  - name: Build project
+    run: npm run build
+
+  - name: Upload build artifacts
+    uses: actions/upload-artifact@v3
+    with:
+      name: build-output
+      path: build/
+      retention-days: 7
+```
+
+### 10. Notifications and Reporting
+
+- Github Actions workflows do send email notifications for failed jobs. You can also integrate notifications into workflows using GitHub's native tools (e.g., issue or pull request comments) or external services (e.g., email, Teams?) for reporting build status, failures, or other important events.
+- Ensure that all stakeholders are informed of workflow outcomes, especially in the case of failures.
+
+**Example:**
+
+```yaml
+steps:
+  - name: Notify team on failure
+    if: failure()
+    uses: slackapi/slack-github-action@v1.23.0
+    with:
+      channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      text: "Build failed on ${{ github.ref }}. Please check the logs."
+```
+
+### 11. Error Handling and Debugging
+
+- Implement error handling within workflows using `if` conditions to manage non-critical steps or to fail gracefully.
+- Enable verbose logging for complex or critical workflows to aid in debugging issues during execution.
+
+**Example:**
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run deployment script
+        run: |
+        set -x
+        ./deploy.sh
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "Deployment failed. Do something here."
+```
+
+### 12. Performance Optimization
+
+- Regularly review and optimize workflows for performance, focusing on reducing build times and resource usage.
+- Utilize parallel jobs and matrix builds where appropriate to speed up the CI/CD process.
+
+**Example: Matrix Builds for Python Versions**
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, 3.10]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest --verbose
+```
+
+### 13. Compliance and Documentation
+
+- Ensure that all workflows comply with organizational security policies mandated by ESA and any relevant industry standards.
+- Document each workflow within the repository's `README.md` file to explain its purpose, triggers, and any specific considerations.
+
+**Example Documentation:**
+
+```markdown
+## CI Pipeline
+
+### Workflows
+
+1. **CI Workflow (`ci.yml`):**
+   -  **Purpose:** This workflow runs automated tests and linting on every push and pull request to ensure code quality.
+   - **Triggers:** 
+     - `push` to any branch
+     - `pull_request` to the `main` branch
+   - **Key Steps:**
+     - Checkout code
+     - Set up Python environment
+     - Install dependencies
+     - Run linting and tests using `ansible-lint`
+   - **Artifacts:**
+     - Test reports and coverage reports are stored as artifacts for review.
+
+2. **Deployment Workflow (`deploy.yml`):**
+   - **Purpose:** This workflow deploys the application to the staging environment on pushes to the `main` branch, and to production on the creation of a new release.
+   - **Triggers:**
+     - `push` to `main` branch (deploys to staging)
+     - `release` event (deploys to production)
+   - **Key Steps:**
+     - Checkout code
+     - Set up the necessary environment and secrets
+     - Run Ansible playbooks to provision infrastructure
+     - Deploy the application using Azure CLI
+   - **Notifications:**
+     - Upon success or failure, notifications are sent to the Microsoft Teams channel configured for the project.
+
+### Environment Variables and Secrets
+
+- **Secrets:**
+  - `AZURE_CREDENTIALS`: Contains credentials to authenticate with Azure.
+  - `ANSIBLE_SECRET`: Secret used in Ansible for...
+  
+- **Environment Variables:**
+  - `PYTHON_VERSION`: Specifies the Python version used in the CI pipeline.
+  - `DEPLOY_ENV`: Specifies the deployment environment (e.g., `staging`, `production`).
+
+### How to Trigger Workflows Manually
+
+- Workflows can also be triggered manually from the GitHub Actions tab by selecting the desired workflow and providing the necessary inputs (if applicable).
+
+### Troubleshooting
+
+- **Common Issues:**
+  - Ensure all secrets and environment variables are correctly set in the repository settings.
+  - Review logs in the GitHub Actions interface for any errors during the workflow run.
+
+- **More Information:**
+  - For help with CI/CD issues, you can refer to the [GitHub Actions Documentation](https://docs.github.com/en/actions).
+```
+
+
