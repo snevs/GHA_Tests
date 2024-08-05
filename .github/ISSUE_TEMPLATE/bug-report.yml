@@ -6,67 +6,109 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill out the sections below to help everyone identify and fix the bug
+        ### Bug Report
+        Please fill out the sections below to help us identify and fix the bug as quickly as possible.
+        **Note:** Required fields are marked with a `*`.
+
+  - type: markdown
+    attributes:
+      value: |
+        #### Issue Description
   - type: textarea
     id: description
     attributes:
-      label: Describe your issue
-      placeholder: When I click here this happens
+      label: Describe your issue *
+      placeholder: When I click here, this happens
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        #### Environment
   - type: textarea
     attributes:
-      label: Operating System
+      label: Operating System *
       description: What operating system are you using?
-      placeholder: "Example: macOS Big Sur"
-      value: operating system
+      placeholder: "Example: macOS Big Sur, Windows 10"
     validations:
       required: true
   - type: dropdown
     attributes:
-      label: Version
-      description: What version of our software are you running?
-      multiple: false
+      label: Software Version *
+      description: Which version of our software are you using?
       options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
-  - type: checkboxes
+        - 1.0.2 (Stable)
+        - 1.0.3 (Beta)
+    validations:
+      required: true
+
+  - type: markdown
     attributes:
-      label: Checks before submitting the issue
-      description: Followed steps or checks before submitting the issue
-      options:
-        - label: Validate X
-          required: true
-        - label: Checked Y
-          required: true
-        - label: Tried Z
-          required: true
+      value: |
+        #### Reproduction Steps
+        Please provide the steps to reproduce the issue:
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
+      label: Steps to Reproduce *
       placeholder: |
         1. Go to page X
         2. Click here
         3. Click there
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        #### Expected vs. Actual Behavior
   - type: textarea
     id: expected
     attributes:
-      label: What was the expected result?
+      label: What was the expected result? *
       placeholder: I expected this to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened? *
+      placeholder: This is what actually happened
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        #### Additional Information
   - type: textarea
     id: screenshots
     attributes:
-      label: Put here any screenshots or videos (optional)
+      label: Attach any screenshots or videos (optional)
+      placeholder: Drop files or use a markdown image link
   - type: dropdown
     id: assign
     attributes:
       label: "Would you like to work on this issue?"
       options:
         - "Yes"
+        - "No"
+
+  - type: checkboxes
+    attributes:
+      label: Checks before submitting the issue *
+      description: Make sure you've done the following before submitting:
+      options:
+        - label: Validated that the issue persists after a fresh restart
+          required: true
+        - label: Checked that this issue has not already been reported
+          required: true
+        - label: Tried all applicable troubleshooting steps
+          required: true
+
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting this issue! We will get back to you as soon as possible.
+        **Thank you for reporting this issue!** Our team will review and get back to you as soon as possible.
