@@ -20,15 +20,21 @@ jobs:
 
       - name: Check and Add Labels
         run: |
+          # Extract issue details
           issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
           issue_title=$(jq --raw-output .issue.title "$GITHUB_EVENT_PATH")
           issue_body=$(jq --raw-output .issue.body "$GITHUB_EVENT_PATH")
+
+          # Debugging: Print out issue details
+          echo "Issue Number: $issue_number"
+          echo "Issue Title: $issue_title"
+          echo "Issue Body: $issue_body"
 
           # Convert issue content to lowercase for easier matching
           content=$(echo "$issue_title $issue_body" | tr '[:upper:]' '[:lower:]')
 
           # Debugging: Print content to see what's being matched
-          echo "Issue Content: $content"
+          echo "Issue Content (lowercased): $content"
 
           # Initialize an empty array for labels to be added
           labels_to_add=()
@@ -40,12 +46,8 @@ jobs:
             # Debugging: Print label name to see what we're checking
             echo "Checking label: $label_name"
 
-            # Convert label name to a pattern that checks for word boundaries
-            pattern="\\b$label_name\\b"
-            echo "Using pattern: $pattern"
-
-            # Check if the pattern matches the issue content
-            if echo "$content" | grep -E -q "$pattern"; then
+            # Check if the label name is present in the issue content
+            if echo "$content" | grep -q "$label_name"; then
               echo "Match found for: $label_name"
               labels_to_add+=("$label_name")
             else
