@@ -17,40 +17,46 @@ jobs:
             > labels.json
           cat labels.json
 
-      - name: Check and Add Labels
-        run: |
-          issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
-          issue_title=$(jq --raw-output .issue.title "$GITHUB_EVENT_PATH")
-          issue_body=$(jq --raw-output .issue.body "$GITHUB_EVENT_PATH")
+- name: Check and Add Labels
+  run: |
+    issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+    issue_title=$(jq --raw-output .issue.title "$GITHUB_EVENT_PATH")
+    issue_body=$(jq --raw-output .issue.body "$GITHUB_EVENT_PATH")
 
-          # Convert issue content to lowercase for easier matching
-          content=$(echo "$issue_title $issue_body" | tr '[:upper:]' '[:lower:]')
+    # Convert issue content to lowercase for easier matching
+    content=$(echo "$issue_title $issue_body" | tr '[:upper:]' '[:lower:]')
 
-          # Initialize an empty array for labels to be added
-          labels_to_add=()
+    # Debugging: Print content to see what's being matched
+    echo "Issue Content: $content"
 
-          # Iterate over each label fetched from the repository
-          jq -c '.[]' labels.json | while read label; do
-            label_name=$(echo "$label" | jq --raw-output .name | tr '[:upper:]' '[:lower:]')
+    # Initialize an empty array for labels to be added
+    labels_to_add=()
 
-            # Check if the label name is present in the issue content
-            if echo "$content" | grep -q "$label_name"; then
-              labels_to_add+=("$label_name")
-            fi
-          done
+    # Iterate over each label fetched from the repository
+    jq -c '.[]' labels.json | while read label; do
+      label_name=$(echo "$label" | jq --raw-output .name | tr '[:upper:]' '[:lower:]')
+      
+      # Debugging: Print label name to see what we're checking
+      echo "Checking label: $label_name"
 
-          # Debugging: Print out the labels to be added
-          echo "Labels to be added: ${labels_to_add[@]}"
+      # Check if the label name is present in the issue content
+      if echo "$content" | grep -q "$label_name"; then
+        labels_to_add+=("$label_name")
+      fi
+    done
 
-          # If labels are found, add them to the issue
-          if [ ${#labels_to_add[@]} -ne 0 ]; then
-            labels_json=$(printf '%s\n' "${labels_to_add[@]}" | jq -R . | jq -s .)
-            curl -sSL -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{\"labels\":$labels_json}" \
-              "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number/labels"
-          else
-            echo "No matching labels found"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # Debugging: Print out the labels to be added
+    echo "Labels to be added: ${labels_to_add[@]}"
+
+    # If labels are found, add them to the issue
+    if [ ${#labels_to_add[@]} -ne 0 ]; then
+      labels_json=$(printf '%s\n' "${labels_to_add[@]}" | jq -R . | jq -s .)
+      curl -sSL -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        -H "Content-Type: application/json" \
+        -d "{\"labels\":$labels_json}" \
+        "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number/labels"
+    else
+      echo "No matching labels found"
+    fi
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
