@@ -15,6 +15,8 @@ jobs:
             -H "Content-Type: application/json" \
             "https://api.github.com/repos/${{ github.repository }}/labels" \
             > labels.json
+          echo "Fetched labels:"
+          cat labels.json
 
       - name: Check and Add Labels
         run: |
@@ -25,19 +27,29 @@ jobs:
           # Convert issue content to lowercase for easier matching
           content=$(echo "$issue_title $issue_body" | tr '[:upper:]' '[:lower:]')
 
+          # Debugging: Print content to see what's being matched
+          echo "Issue Content: $content"
+
           # Initialize an empty array for labels to be added
           labels_to_add=()
 
           # Iterate over each label fetched from the repository
           jq -c '.[]' labels.json | while read label; do
             label_name=$(echo "$label" | jq --raw-output .name | tr '[:upper:]' '[:lower:]')
-            
+
+            # Debugging: Print label name to see what we're checking
+            echo "Checking label: $label_name"
+
             # Convert label name to a pattern that checks for word boundaries
             pattern="\\b$label_name\\b"
-            
+            echo "Using pattern: $pattern"
+
             # Check if the pattern matches the issue content
             if echo "$content" | grep -E -q "$pattern"; then
+              echo "Match found for: $label_name"
               labels_to_add+=("$label_name")
+            else
+              echo "No match for: $label_name"
             fi
           done
 
