@@ -15,6 +15,7 @@ jobs:
             -H "Content-Type: application/json" \
             "https://api.github.com/repos/${{ github.repository }}/labels" \
             > labels.json
+          cat labels.json
 
       - name: Check and Add Labels
         run: |
@@ -30,14 +31,16 @@ jobs:
 
           # Iterate over each label fetched from the repository
           jq -c '.[]' labels.json | while read label; do
-            label_name=$(echo "$label" | jq --raw-output .name)
-            label_keyword=$(echo "$label" | jq --raw-output .name | tr '[:upper:]' '[:lower:]')
-            
-            # Check if the label name or a keyword derived from it is present in the issue content
-            if echo "$content" | grep -q "$label_keyword"; then
+            label_name=$(echo "$label" | jq --raw-output .name | tr '[:upper:]' '[:lower:]')
+
+            # Check if the label name is present in the issue content
+            if echo "$content" | grep -q "$label_name"; then
               labels_to_add+=("$label_name")
             fi
           done
+
+          # Debugging: Print out the labels to be added
+          echo "Labels to be added: ${labels_to_add[@]}"
 
           # If labels are found, add them to the issue
           if [ ${#labels_to_add[@]} -ne 0 ]; then
@@ -46,6 +49,8 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{\"labels\":$labels_json}" \
               "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number/labels"
+          else
+            echo "No matching labels found"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
