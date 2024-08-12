@@ -1,23 +1,55 @@
-name: Bug Report
-description: Report a bug
+name: "Bug Report"
+description: "Report a bug"
 title: "[Bug]: "
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Please fill out the sections below to help everyone identify and fix the bug
+        ### Bug Report
+        Please fill out the sections below to help us identify and fix the bug.
   - type: textarea
     id: description
     attributes:
-      label: Describe your issue
-      placeholder: When I click here this happens
+      label: "Describe your issue"
+      placeholder: "When I click here, this happens"
     validations:
       required: true
   - type: textarea
+    id: os
+    attributes:
+      label: "Operating System"
+      description: "What operating system are you using?"
+      placeholder: "Example: macOS Big Sur"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: "Version"
+      description: "What version of our software are you running?"
+      multiple: false
+      options:
+        - 1.0.2 (Stable)
+        - 1.0.3 (Beta)
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checks before submitting the issue"
+      description: "Please ensure the following checks have been made:"
+      options:
+        - label: "Validate X"
+          required: true
+        - label: "Checked Y"
+          required: true
+        - label: "Tried Z"
+          required: true
+  - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
+      label: "Steps to reproduce"
       placeholder: |
         1. Go to page X
         2. Click here
@@ -27,12 +59,12 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: What was the expected result?
-      placeholder: I expected this to happen
+      label: "What was the expected result?"
+      placeholder: "I expected this to happen"
   - type: textarea
     id: screenshots
     attributes:
-      label: Put here any screenshots or videos (optional)
+      label: "Put here any screenshots or videos (optional)"
   - type: dropdown
     id: assign
     attributes:
