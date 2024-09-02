@@ -5,7 +5,8 @@ on:
   push:
     branches: "*"
   pull_request_target:
-    types: [opened, synchronize]
+    # Add multiple activity types
+    types: [opened, reopened, synchronize]
 
 jobs:
   add-link:
@@ -16,6 +17,8 @@ jobs:
         uses: redhat-actions/try-in-web-ide@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          add_comment: true
+          add_status: true
 permissions:
   checks: write
   contents: read
