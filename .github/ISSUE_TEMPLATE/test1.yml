@@ -1,0 +1,89 @@
+---
+name: "Bug Report"
+description: "Report a bug to help us improve."
+title: "[BUG] - "
+labels: ["bug", "needs triage"]
+assignees: ""
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report
+
+        Please fill out the following details to help us diagnose and fix the issue.
+
+  - type: input
+    id: bug-title
+    attributes:
+      label: "Bug Summary"
+      description: "Provide a brief summary of the bug."
+      placeholder: "Enter a short description of the bug"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "List the steps to reproduce the bug."
+      placeholder: |
+        1. Step one
+        2. Step two
+        3. Step three
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "Describe what you expected to happen."
+      placeholder: "What did you expect to happen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: "Actual Behavior"
+      description: "Describe what actually happened."
+      placeholder: "What actually happened?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity"
+      description: "How severe is the bug?"
+      options:
+        - "Critical"
+        - "High"
+        - "Medium"
+        - "Low"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional Context"
+      description: "Any other context about the problem?"
+      placeholder: "Include logs, screenshots, or any other relevant details."
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 Checklist
+        Please ensure you have completed the following before submitting the issue:
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I have searched for similar issues."
+          required: true
+        - label: "I have included all necessary information."
+          required: true
