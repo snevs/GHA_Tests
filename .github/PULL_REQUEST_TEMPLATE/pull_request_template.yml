@@ -1,0 +1,61 @@
+name: Pull Request Approval Checklist
+description: Ensure that your pull request fulfills all the requirements below for a smooth review process.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Getting a PR Approved
+        Please ensure that your PR fulfills all the requirements below.
+​
+  - type: checkboxes
+    id: contribution_guidelines
+    attributes:
+      label: Contribution Guidelines
+      description: Have you followed the contribution guidelines and adhered to the project's standards?
+      options:
+        - label: Yes
+        - label: No
+  
+  - type: dropdown
+    id: team_discussion
+    attributes:
+      label: Has the proposal been discussed and approved by the team?
+      options:
+        - Yes
+        - No
+        - Not Applicable
+​
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Is the problem statement concise and does the solution directly address the problem?
+      description: Please describe how your solution addresses the problem.
+      placeholder: Provide a brief description here...
+​
+  - type: dropdown
+    id: architects_review
+    attributes:
+      label: Has the final solution been reviewed and approved by the Architects?
+      options:
+        - Yes
+        - No
+        - Not Applicable
+​
+  - type: textarea
+    id: design_review_board
+    attributes:
+      label: Design Review Board
+      description: If applicable, include the agenda item from the design review board or link to the relevant task.
+      placeholder: Include link or task ID here...
+​
+  - type: markdown
+    attributes:
+      value: |
+        ## Additional Information
+        Provide any additional information that might be helpful for reviewers.
+  
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: Additional Information
+      placeholder: Add any extra context, notes, or links here...
