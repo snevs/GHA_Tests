@@ -3,7 +3,8 @@ name: "Bug Report"
 description: "Report a bug to help us improve."
 title: "[BUG] - "
 labels: ["bug", "needs triage"]
-assignees: ""
+assignees:
+  - snevs
 
 body:
   - type: markdown
