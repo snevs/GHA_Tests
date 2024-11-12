@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Pull Request Approval Checklist 
+        # Pull Request Approval Checklist
 
         Thank you for your contribution! Please ensure that your PR fulfills all the requirements below to facilitate a smooth review process.
 
@@ -35,8 +35,8 @@ body:
       label: Contribution Guidelines
       description: Have you followed the contribution guidelines and adhered to the project's standards?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
 
   - type: dropdown
     id: team_discussion
@@ -44,9 +44,9 @@ body:
       label: Team Discussion
       description: Has this proposal been discussed and approved by the team?
       options:
-        - Yes
-        - No
-        - Not Applicable
+        - "Yes"
+        - "No"
+        - "Not Applicable"
 
   - type: textarea
     id: problem_solution
@@ -61,9 +61,9 @@ body:
       label: Architect's Review
       description: Has the final solution been reviewed and approved by the architects?
       options:
-        - Yes
-        - No
-        - Not Applicable
+        - "Yes"
+        - "No"
+        - "Not Applicable"
 
   - type: dropdown
     id: design_review_board
@@ -71,10 +71,10 @@ body:
       label: Design Review Board
       description: If applicable, select the agenda item from the design review board or relevant task.
       options:
-        - DRB-001: Feature Implementation
-        - DRB-002: Bug Fixes
-        - DRB-003: Code Refactoring
-        - Not Applicable
+        - "DRB-001: Feature Implementation"
+        - "DRB-002: Bug Fixes"
+        - "DRB-003: Code Refactoring"
+        - "Not Applicable"
 
   - type: markdown
     attributes:
@@ -102,4 +102,3 @@ body:
       label: Additional Information
       description: Provide any additional information that might be helpful for reviewers.
       placeholder: Add any extra context, notes, or links here...
-
