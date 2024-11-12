@@ -29,13 +29,14 @@ body:
       description: List any related issues (e.g., #123).
       placeholder: Mention related issues here...
 
-  - type: checkboxes
+  - type: dropdown
     id: contribution_guidelines
     attributes:
       label: Contribution Guidelines
       description: Have you followed the contribution guidelines and adhered to the project's standards?
       options:
-        - label: I have read and followed the contribution guidelines.
+        - Yes
+        - No
 
   - type: dropdown
     id: team_discussion
@@ -64,12 +65,16 @@ body:
         - No
         - Not Applicable
 
-  - type: textarea
+  - type: dropdown
     id: design_review_board
     attributes:
       label: Design Review Board
-      description: If applicable, include the agenda item from the design review board or link to the relevant task.
-      placeholder: Include link or task ID here...
+      description: If applicable, select the agenda item from the design review board or relevant task.
+      options:
+        - DRB-001: Feature Implementation
+        - DRB-002: Bug Fixes
+        - DRB-003: Code Refactoring
+        - Not Applicable
 
   - type: markdown
     attributes:
