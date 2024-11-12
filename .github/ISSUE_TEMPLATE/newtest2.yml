@@ -1,4 +1,4 @@
-name: Bug Report X
+name: Bug Report
 description: Report a bug to help us improve
 title: "[Bug]: "
 labels: [bug]
@@ -17,7 +17,8 @@ body:
       label: "**Bug Title**"
       description: "A brief summary of the bug."
       placeholder: "e.g., Crash when clicking on Save button"
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     id: bug_description
@@ -25,7 +26,8 @@ body:
       label: "**Description**"
       description: "A detailed description of the bug."
       placeholder: "Describe the bug in detail..."
-      required: true
+      validations:
+        required: true
 
   - type: dropdown
     id: severity
@@ -37,7 +39,8 @@ body:
         - "High 🟠"
         - "Medium 🟡"
         - "Low 🔵"
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     id: steps_to_reproduce
@@ -49,7 +52,8 @@ body:
         2. Click on '...'
         3. Scroll down to '...'
         4. See error
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     id: expected_behavior
@@ -57,7 +61,8 @@ body:
       label: "**Expected Behavior**"
       description: "Describe what you expected to happen."
       placeholder: "Explain what you expected to see..."
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     id: actual_behavior
@@ -65,7 +70,8 @@ body:
       label: "**Actual Behavior**"
       description: "Describe what actually happened."
       placeholder: "Explain what actually happened..."
-      required: true
+      validations:
+        required: true
 
   - type: checkboxes
     id: has_screenshots
@@ -84,7 +90,8 @@ body:
         when:
           has_screenshots:
             includes: "Yes, I have screenshots or logs 📸"
-      required: true
+      validations:
+        required: true
 
   - type: input
     id: environment
@@ -92,7 +99,8 @@ body:
       label: "**Environment**"
       description: "Provide details about your environment."
       placeholder: "e.g., OS, Browser, Version"
-      required: true
+      validations:
+        required: true
 
   - type: dropdown
     id: can_reproduce
@@ -103,7 +111,8 @@ body:
         - "Yes, always ✅"
         - "Sometimes ⚠️"
         - "No ❌"
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     id: additional_info
@@ -119,4 +128,5 @@ body:
       description: "By submitting this issue, you agree to abide by our code of conduct."
       options:
         - label: "I agree to follow this project's [Code of Conduct](../CODE_OF_CONDUCT.md)"
-      required: true
+      validations:
+        required: true
