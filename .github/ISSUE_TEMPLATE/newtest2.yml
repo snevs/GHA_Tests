@@ -2,7 +2,6 @@ name: Bug Report
 description: Report a bug to help us improve
 title: "[Bug]: "
 labels: [bug]
-assignees: " "
 
 body:
   - type: markdown
@@ -49,9 +48,9 @@ body:
       label: "**Steps to Reproduce**"
       description: "Please provide step-by-step instructions to reproduce the bug."
       placeholder: |
-        1. Go to "..."
-        2. Click on "..."
-        3. Scroll down to "..."
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
         4. See error
     validations:
       required: true
@@ -83,21 +82,22 @@ body:
     validations:
       required: false
 
-  - type: conditional
+  - type: textarea
+    id: screenshots
     attributes:
-      if:
-        field: has_screenshots
-        includes:
-          - "Yes, I have screenshots or logs 📸"
-      then:
-        - type: textarea
-          id: screenshots
-          attributes:
-            label: "**Screenshots or Logs**"
-            description: "Please provide screenshots or logs to help us understand the issue."
-            placeholder: "Paste image URLs or drag & drop images/logs here"
-          validations:
-            required: true
+      label: "**Screenshots or Logs**"
+      description: "Please provide screenshots or logs to help us understand the issue."
+      placeholder: "Paste image URLs or drag & drop images/logs here"
+      render:
+        when:
+          has_screenshots:
+            contains: "Yes, I have screenshots or logs 📸"
+    validations:
+      required:
+        when:
+          has_screenshots:
+            contains: "Yes, I have screenshots or logs 📸"
+        message: "Screenshots or logs are required since you indicated you have them."
 
   - type: input
     id: environment
