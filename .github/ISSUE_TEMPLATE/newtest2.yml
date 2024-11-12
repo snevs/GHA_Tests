@@ -14,119 +14,119 @@ body:
   - type: input
     id: bug_title
     attributes:
-      label: "**Bug Title**"
+      label: "Bug Title"
       description: "A brief summary of the bug."
       placeholder: "e.g., Crash when clicking on Save button"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: bug_description
     attributes:
-      label: "**Description**"
+      label: "Description"
       description: "A detailed description of the bug."
       placeholder: "Describe the bug in detail..."
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: dropdown
     id: severity
     attributes:
-      label: "**Severity Level**"
+      label: "Severity Level"
       description: "How severe is the bug?"
       options:
         - "Critical 🔴"
         - "High 🟠"
         - "Medium 🟡"
         - "Low 🔵"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: steps_to_reproduce
     attributes:
-      label: "**Steps to Reproduce**"
+      label: "Steps to Reproduce"
       description: "Please provide step-by-step instructions to reproduce the bug."
       placeholder: |
         1. Go to '...'
         2. Click on '...'
         3. Scroll down to '...'
         4. See error
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: expected_behavior
     attributes:
-      label: "**Expected Behavior**"
+      label: "Expected Behavior"
       description: "Describe what you expected to happen."
       placeholder: "Explain what you expected to see..."
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: actual_behavior
     attributes:
-      label: "**Actual Behavior**"
+      label: "Actual Behavior"
       description: "Describe what actually happened."
       placeholder: "Explain what actually happened..."
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: checkboxes
     id: has_screenshots
     attributes:
-      label: "**Do you have screenshots or logs?**"
+      label: "Do you have screenshots or logs?"
       options:
         - label: "Yes, I have screenshots or logs 📸"
 
   - type: textarea
     id: screenshots
     attributes:
-      label: "**Screenshots or Logs**"
+      label: "Screenshots or Logs"
       description: "Please provide screenshots or logs to help us understand the issue."
       placeholder: "Paste image URLs or drag & drop images/logs here"
       render:
         when:
           has_screenshots:
             includes: "Yes, I have screenshots or logs 📸"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: input
     id: environment
     attributes:
-      label: "**Environment**"
+      label: "Environment"
       description: "Provide details about your environment."
       placeholder: "e.g., OS, Browser, Version"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: dropdown
     id: can_reproduce
     attributes:
-      label: "**Can you reproduce the bug?**"
+      label: "Can you reproduce the bug?"
       description: "Is the bug reproducible every time?"
       options:
         - "Yes, always ✅"
         - "Sometimes ⚠️"
         - "No ❌"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: additional_info
     attributes:
-      label: "**Additional Information**"
+      label: "Additional Information"
       description: "Any other information that might be helpful."
       placeholder: "Add any extra context, notes, or links here..."
 
   - type: checkboxes
     id: agree_to_terms
     attributes:
-      label: "**Code of Conduct**"
+      label: "Code of Conduct"
       description: "By submitting this issue, you agree to abide by our code of conduct."
       options:
         - label: "I agree to follow this project's [Code of Conduct](../CODE_OF_CONDUCT.md)"
-      validations:
-        required: true
+    validations:
+      required: true
