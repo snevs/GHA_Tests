@@ -1,0 +1,11 @@
+apiVersion: 1.0.0
+metadata:
+  name: project-dev-environment
+projects:
+  - name: GHA_Tests
+    source:
+      type: git
+      location: 'https://github.com/snevs/GHA_Tests'
+components:
+  - type: chePlugin
+    id: redhat/python/latest
