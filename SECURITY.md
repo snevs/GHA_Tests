@@ -14,3 +14,4 @@ If there are any vulnerabilities in **GHA_Tests**, don't hesitate to _report the
    Please **do not disclose the vulnerability publicly** until a fix is released!
 
 4. Once we have either a) published a fix, or b) declined to address the vulnerability for whatever reason, you are free to publicly disclose it.
+
