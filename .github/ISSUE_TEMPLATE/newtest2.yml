@@ -2,7 +2,7 @@ name: Bug Report
 description: Report a bug to help us improve
 title: "[Bug]: "
 labels: [bug]
-assignees: ''
+assignees: " "
 
 body:
   - type: markdown
@@ -49,9 +49,9 @@ body:
       label: "**Steps to Reproduce**"
       description: "Please provide step-by-step instructions to reproduce the bug."
       placeholder: |
-        1. Go to '...'
-        2. Click on '...'
-        3. Scroll down to '...'
+        1. Go to "..."
+        2. Click on "..."
+        3. Scroll down to "..."
         4. See error
     validations:
       required: true
