@@ -35,10 +35,10 @@ body:
       label: "Severity Level"
       description: "How severe is the bug?"
       options:
-        - "Critical 🔴"
-        - "High 🟠"
-        - "Medium 🟡"
-        - "Low 🔵"
+        - "🔴 Critical"
+        - "🟠 High"
+        - "🟡 Medium"
+        - "🔵 Low"
     validations:
       required: true
 
@@ -108,9 +108,9 @@ body:
       label: "Can you reproduce the bug?"
       description: "Is the bug reproducible every time?"
       options:
-        - "Yes, always ✅"
-        - "Sometimes ⚠️"
-        - "No ❌"
+        - "✅ Yes, always"
+        - "⚠️ Sometimes"
+        - "❌ No"
     validations:
       required: true
 
