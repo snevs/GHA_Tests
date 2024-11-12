@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Pull Request Approval Checklist
+        # Pull Request Approval Checklist 
 
         Thank you for your contribution! Please ensure that your PR fulfills all the requirements below to facilitate a smooth review process.
 
@@ -102,3 +102,4 @@ body:
       label: Additional Information
       description: Provide any additional information that might be helpful for reviewers.
       placeholder: Add any extra context, notes, or links here...
+
